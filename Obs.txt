@@ -1,0 +1,6 @@
+Observações:
+
+1) O fluxo completo do projeto está documentado no arquivo Sumario.xlsm.
+2) As pastas tblt_trade.accdb e Base.csv podem ser excluídas, caso deseje. Mantive-as apenas para facilitar o entendimento do processo.
+3) O Exercício 3 da pasta ex gerencial.xlsx também foi integrado ao arquivo Sumario.xlsm.
+4) O código referente ao exercício realizado em Python está no arquivo Relatorio_Python.Pynp.
