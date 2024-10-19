@@ -58,6 +58,7 @@ def build_main(tickers, prices):
         col3.metric(label="Volatility", value=f"{vols[t]:.0%}", delta_color="normal")
 
     st.write("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)  # Espaço entre os gráficos
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -68,10 +69,11 @@ def build_main(tickers, prices):
             fig_line.add_trace(go.Scatter(x=norm_prices.index, y=norm_prices[column], mode='lines', name=column))
         
         fig_line.update_layout(
-            height=500,  # Aumente a altura para 350
-            width=3000,   # Aumente a largura para 700
+            height=400,  # Aumente a altura para 400
+            width=900,   # Aumente a largura para 900
             xaxis_title="Date",
             yaxis_title="Normalized Price",
+            legend=dict(x=0, y=1)  # Ajuste a posição da legenda
         )
         st.plotly_chart(fig_line, use_container_width=True)
 
@@ -86,15 +88,15 @@ def build_main(tickers, prices):
         )
         fig_scatter.update_traces(
             textfont_color='white',
-            marker=dict(size=80),  # Aumente o tamanho dos marcadores
-            textfont_size=10,
+            marker=dict(size=10),  # Aumente o tamanho dos marcadores
+            textfont_size=12,
         )
         fig_scatter.layout.yaxis.title = 'Total Return'
         fig_scatter.layout.xaxis.title = 'Annualized Volatility'
         
         fig_scatter.update_layout(
-            height=350,  # Aumente a altura para 350
-            width=700,   # Aumente a largura para 700
+            height=400,  # Aumente a altura para 400
+            width=900,   # Aumente a largura para 900
         )
 
         fig_scatter.layout.xaxis.tickformat = ".0%"
