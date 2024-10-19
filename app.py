@@ -1,20 +1,18 @@
-# -*- coding: utf-8 -*-
 import pandas as pd
-import numpy as np
+import streamlit as st
 import yfinance as yf
+import numpy as np
 import plotly.express as px
 from datetime import datetime
-import streamlit as st
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
+from pyngrok import ngrok
 
-# Page configuration
-st.set_page_config(layout="wide", page_title='Python for Investors')
-
-# Function to build the sidebar
+# Função para construir a barra lateral
 def build_sidebar():
-    ticker_list = pd.read_csv("tickers.csv", index_col=0)  # Use apenas o nome do arquivo
-    tickers = st.multiselect(label="Select Companies", options=ticker_list['Tickers'].tolist(), placeholder='Codes')  # Alterado aqui
+    # Lê o CSV sem considerar cabeçalho
+    ticker_list = pd.read_csv("tickers.csv", header=None)  # Lê o CSV sem cabeçalho
+    tickers = st.multiselect(label="Select Companies", options=ticker_list[1].tolist(), placeholder='Codes')  # Usa a segunda coluna
     tickers = [t + ".SA" for t in tickers]
     start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
     end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
@@ -30,8 +28,7 @@ def build_sidebar():
         return tickers, prices
     return None, None
 
-
-# Function to build the main content
+# Função para construir o conteúdo principal
 def build_main(tickers, prices):
     weights = np.ones(len(tickers)) / len(tickers)
     prices['portfolio'] = prices.drop("IBOV", axis=1) @ weights
@@ -46,7 +43,6 @@ def build_main(tickers, prices):
         c.subheader(t, divider="red")
         colA, colB, colC = c.columns(3)
 
-        # Replace images with text
         if t == "portfolio":
             colA.write("📊 Portfolio")
         elif t == "IBOV":
@@ -90,9 +86,13 @@ with st.sidebar:
     st.title("Quant Challenge")
     tickers, prices = build_sidebar()
 
-# Main page title
+# Título da página principal
 st.title('Python for Investors')
 
-# If there are selected tickers, display the dashboard
+# Se houver tickers selecionados, exibe o painel
 if tickers:
     build_main(tickers, prices)
+
+# Lançar ngrok
+url = ngrok.connect(8501)
+print(f'Access your stock dashboard at {url}')
