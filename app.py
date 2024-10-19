@@ -70,7 +70,7 @@ def build_main(tickers, prices):
         
         fig_line.update_layout(
             height=400,  # Aumente a altura para 400
-            width=900,   # Aumente a largura para 900
+            width=2000,   # Aumente a largura para 900
             xaxis_title="Date",
             yaxis_title="Normalized Price",
             legend=dict(x=0, y=1)  # Ajuste a posição da legenda
