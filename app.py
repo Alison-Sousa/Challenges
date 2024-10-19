@@ -7,8 +7,8 @@ from datetime import datetime
 
 # Função para construir a barra lateral
 def build_sidebar():
-    # Lê o CSV sem cabeçalho
-    ticker_list = pd.read_csv("tickers.csv", header=None)  # Lê o CSV sem cabeçalho
+    # Lê o CSV sem cabeçalho e ignora a primeira linha
+    ticker_list = pd.read_csv("tickers.csv", header=None, skiprows=1)  # Ignora a primeira linha
     ticker_list.columns = ["Index", "Ticker"]  # Renomeia as colunas
 
     # Usa a segunda coluna para seleção de tickers
@@ -60,7 +60,7 @@ def build_main(tickers, prices):
     col1, col2 = st.columns(2, gap='large')
     with col1:
         st.subheader("Relative Performance")
-        st.line_chart(norm_prices, height=600)  # Aumenta a altura do gráfico
+        st.line_chart(norm_prices, height=400, use_container_width=True)  # Aumenta a altura do gráfico e ajusta a largura
 
     with col2:
         st.subheader("Risk-Return")
@@ -78,7 +78,8 @@ def build_main(tickers, prices):
         )
         fig.layout.yaxis.title = 'Total Return'
         fig.layout.xaxis.title = 'Annualized Volatility'
-        fig.layout.height = 600  # Aumenta a altura do gráfico
+        fig.layout.height = 400  # Aumenta a altura do gráfico
+        fig.layout.width = 800  # Define a largura do gráfico
         fig.layout.xaxis.tickformat = ".0%"
         fig.layout.yaxis.tickformat = ".0%"
         fig.layout.coloraxis.colorbar.title = 'Sharpe'
