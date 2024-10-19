@@ -36,10 +36,12 @@ def build_main(tickers, prices):
     vols = returns.std() * np.sqrt(252)
     rets = (norm_prices.iloc[-1] - 100) / 100
 
+    # Adicionando espaço para as métricas
+    st.subheader("Performance Metrics")
     mygrid = grid(5, 5, 5, 5, 5, 5, vertical_align="top")
     for t in prices.columns:
         c = mygrid.container(border=True)
-        c.subheader(t, divider="red")
+        c.subheader(t.rstrip(".SA"), divider="red")
         colA, colB, colC = c.columns(3)
 
         if t == "portfolio":
