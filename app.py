@@ -39,11 +39,11 @@ def build_main(tickers, prices):
     vols = returns.std() * np.sqrt(252)
     rets = (norm_prices.iloc[-1] - 100) / 100
 
-    # Ajustando o layout com mais espaço
-    st.write("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)  # Espaço entre a sidebar e o conteúdo
+    st.write("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)  # Espaço entre a sidebar e o conteúdo
 
+    # Títulos menores para os gráficos
     for t in prices.columns:
-        st.write(f"<h3 style='margin-top: 30px; font-size: 24px;'>{t.rstrip('.SA')}</h3>", unsafe_allow_html=True)  # Títulos em negrito e tamanho maior
+        st.write(f"<h4 style='margin-top: 20px; font-size: 20px;'>{t.rstrip('.SA')}</h4>", unsafe_allow_html=True)  # Títulos em negrito e tamanho menor
         col1, col2, col3 = st.columns(3)
 
         if t == "portfolio":
@@ -56,14 +56,13 @@ def build_main(tickers, prices):
         col2.metric(label="Return", value=f"{rets[t]:.0%}", delta_color="normal")
         col3.metric(label="Volatility", value=f"{vols[t]:.0%}", delta_color="normal")
 
-    # Ajustando os gráficos para melhor visualização
     st.write("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)  # Espaço entre os gráficos
     col1, col2 = st.columns(2)
 
     with col1:
         st.subheader("Relative Performance")
         # Aumente a altura e a largura do gráfico aqui
-        st.line_chart(norm_prices, height=500, use_container_width=True)  # Aumente a altura para 500
+        st.line_chart(norm_prices, height=350, use_container_width=True)  # Aumente a altura para 350
 
     with col2:
         st.subheader("Risk-Return")
@@ -76,16 +75,16 @@ def build_main(tickers, prices):
         )
         fig.update_traces(
             textfont_color='white',
-            marker=dict(size=50),  # Tamanho dos marcadores
-            textfont_size=12,
+            marker=dict(size=80),  # Aumente o tamanho dos marcadores
+            textfont_size=10,
         )
         fig.layout.yaxis.title = 'Total Return'
         fig.layout.xaxis.title = 'Annualized Volatility'
         
         # Aumente a altura e a largura do gráfico aqui
         fig.update_layout(
-            height=500,  # Aumente a altura para 500
-            width=800,   # Aumente a largura para 800
+            height=350,  # Aumente a altura para 350
+            width=700,   # Aumente a largura para 700
         )
 
         fig.layout.xaxis.tickformat = ".0%"
