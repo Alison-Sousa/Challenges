@@ -62,7 +62,7 @@ def build_main(tickers, prices):
     with col1:
         st.subheader("Relative Performance")
         # Aumente a altura e a largura do gráfico aqui
-        st.line_chart(norm_prices, height=350, use_container_width=True)  # Aumente a altura para 350
+        st.line_chart(norm_prices, height=1000, use_container_width=True)  # Aumente a altura para 350
 
     with col2:
         st.subheader("Risk-Return")
