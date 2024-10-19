@@ -6,7 +6,6 @@ import plotly.express as px
 from datetime import datetime
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
-from pyngrok import ngrok
 
 # Função para construir a barra lateral
 def build_sidebar():
@@ -92,7 +91,3 @@ st.title('Python for Investors')
 # Se houver tickers selecionados, exibe o painel
 if tickers:
     build_main(tickers, prices)
-
-# Lançar ngrok
-url = ngrok.connect(8501)
-print(f'Access your stock dashboard at {url}')
