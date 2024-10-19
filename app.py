@@ -83,7 +83,7 @@ def build_main(tickers, prices):
         
         # Aumente a altura e a largura do gráfico aqui
         fig.update_layout(
-            height=900,  # Aumente a altura para 350
+            height=400,  # Aumente a altura para 350
             width=1000,   # Aumente a largura para 700
         )
 
