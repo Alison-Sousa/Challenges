@@ -14,7 +14,7 @@ def build_sidebar():
     # Usa a segunda coluna para seleção de tickers
     tickers = st.multiselect(label="Select Companies", options=ticker_list["Ticker"].tolist(), placeholder='Select a ticker')  
     tickers = [t + ".SA" for t in tickers]
-    
+
     # Data de início e fim
     start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
     end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
@@ -41,8 +41,9 @@ def build_main(tickers, prices):
 
     # Ajustando o layout com mais espaço
     st.write("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)  # Espaço entre a sidebar e o conteúdo
+
     for t in prices.columns:
-        st.write(f"<h4 style='margin-top: 30px;'>{t.rstrip('.SA')}</h4>", unsafe_allow_html=True)  # Títulos em negrito com margem
+        st.write(f"<h3 style='margin-top: 30px; font-size: 24px;'>{t.rstrip('.SA')}</h3>", unsafe_allow_html=True)  # Títulos em negrito e tamanho maior
         col1, col2, col3 = st.columns(3)
 
         if t == "portfolio":
@@ -52,14 +53,14 @@ def build_main(tickers, prices):
         else:
             col1.write(f"🏢 {t.rstrip('.SA')}")
 
-        col2.metric(label="Return", value=f"{rets[t]:.0%}")
-        col3.metric(label="Volatility", value=f"{vols[t]:.0%}")
+        col2.metric(label="Return", value=f"{rets[t]:.0%}", delta_color="normal")
+        col3.metric(label="Volatility", value=f"{vols[t]:.0%}", delta_color="normal")
 
     # Ajustando os gráficos para melhor visualização
     col1, col2 = st.columns(2, gap='large')
     with col1:
         st.subheader("Relative Performance")
-        st.line_chart(norm_prices, height=400)  # Altura ajustada
+        st.line_chart(norm_prices, height=600)  # Aumenta a altura do gráfico
 
     with col2:
         st.subheader("Risk-Return")
@@ -72,12 +73,12 @@ def build_main(tickers, prices):
         )
         fig.update_traces(
             textfont_color='white',
-            marker=dict(size=45),
-            textfont_size=10,
+            marker=dict(size=50),  # Tamanho dos marcadores
+            textfont_size=12,
         )
         fig.layout.yaxis.title = 'Total Return'
         fig.layout.xaxis.title = 'Annualized Volatility'
-        fig.layout.height = 400  # Altura ajustada
+        fig.layout.height = 600  # Aumenta a altura do gráfico
         fig.layout.xaxis.tickformat = ".0%"
         fig.layout.yaxis.tickformat = ".0%"
         fig.layout.coloraxis.colorbar.title = 'Sharpe'
