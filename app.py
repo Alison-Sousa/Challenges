@@ -14,7 +14,7 @@ st.set_page_config(layout="wide", page_title='Python for Investors')
 # Function to build the sidebar
 def build_sidebar():
     ticker_list = pd.read_csv("tickers.csv", index_col=0)  # Use apenas o nome do arquivo
-    tickers = st.multiselect(label="Select Companies", options=ticker_list['ticker'].tolist(), placeholder='Codes')
+    tickers = st.multiselect(label="Select Companies", options=ticker_list['Tickers'].tolist(), placeholder='Codes')  # Alterado aqui
     tickers = [t + ".SA" for t in tickers]
     start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
     end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
@@ -29,6 +29,7 @@ def build_sidebar():
         prices['IBOV'] = yf.download("^BVSP", start=start_date, end=end_date)["Adj Close"]
         return tickers, prices
     return None, None
+
 
 # Function to build the main content
 def build_main(tickers, prices):
