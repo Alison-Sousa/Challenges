@@ -68,7 +68,7 @@ def build_main(tickers, prices):
             fig_line.add_trace(go.Scatter(x=norm_prices.index, y=norm_prices[column], mode='lines', name=column))
         
         fig_line.update_layout(
-            height=1500,  # Aumente a altura para 350
+            height=500,  # Aumente a altura para 350
             width=3000,   # Aumente a largura para 700
             xaxis_title="Date",
             yaxis_title="Normalized Price",
