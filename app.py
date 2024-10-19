@@ -57,11 +57,13 @@ def build_main(tickers, prices):
         col3.metric(label="Volatility", value=f"{vols[t]:.0%}", delta_color="normal")
 
     # Ajustando os gráficos para melhor visualização
-    col1, col2 = st.columns(2, gap='large')
+    st.write("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)  # Espaço entre os gráficos
+    col1, col2 = st.columns(2)
+
     with col1:
         st.subheader("Relative Performance")
         # Aumente a altura e a largura do gráfico aqui
-        st.line_chart(norm_prices, height=1000, use_container_width=True)  # Aumente a altura para 600
+        st.line_chart(norm_prices, height=500, use_container_width=True)  # Aumente a altura para 500
 
     with col2:
         st.subheader("Risk-Return")
@@ -81,8 +83,10 @@ def build_main(tickers, prices):
         fig.layout.xaxis.title = 'Annualized Volatility'
         
         # Aumente a altura e a largura do gráfico aqui
-        fig.layout.height = 1000  # Aumente a altura para 600
-        fig.layout.width = 3000  # Aumente a largura para 1000
+        fig.update_layout(
+            height=500,  # Aumente a altura para 500
+            width=800,   # Aumente a largura para 800
+        )
 
         fig.layout.xaxis.tickformat = ".0%"
         fig.layout.yaxis.tickformat = ".0%"
