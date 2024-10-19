@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import streamlit as st
 import pandas as pd
 import numpy as np
 import yfinance as yf
 import plotly.express as px
 from datetime import datetime
+import streamlit as st
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
@@ -13,8 +13,8 @@ st.set_page_config(layout="wide", page_title='Python for Investors')
 
 # Function to build the sidebar
 def build_sidebar():
-    ticker_list = pd.read_csv("/content/drive/MyDrive/Files/tickers.csv", index_col=0)
-    tickers = st.multiselect(label="Select Companies", options=ticker_list, placeholder='Codes')
+    ticker_list = pd.read_csv("tickers.csv", index_col=0)  # Use apenas o nome do arquivo
+    tickers = st.multiselect(label="Select Companies", options=ticker_list['ticker'].tolist(), placeholder='Codes')
     tickers = [t + ".SA" for t in tickers]
     start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
     end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
@@ -86,7 +86,7 @@ def build_main(tickers, prices):
 
 # Sidebar
 with st.sidebar:
-    st.title("Quant Challenge")  # Updated title
+    st.title("Quant Challenge")
     tickers, prices = build_sidebar()
 
 # Main page title
