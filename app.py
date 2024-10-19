@@ -3,6 +3,7 @@ import streamlit as st
 import yfinance as yf
 import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
 from datetime import datetime
 
 # Função para construir a barra lateral
@@ -61,36 +62,45 @@ def build_main(tickers, prices):
 
     with col1:
         st.subheader("Relative Performance")
-        # Aumente a altura e a largura do gráfico aqui
-        st.line_chart(norm_prices, height=1000, use_container_width=True)  # Aumente a altura para 350
+        # Usando plotly para o gráfico de linha
+        fig_line = go.Figure()
+        for column in norm_prices.columns:
+            fig_line.add_trace(go.Scatter(x=norm_prices.index, y=norm_prices[column], mode='lines', name=column))
+        
+        fig_line.update_layout(
+            height=350,  # Aumente a altura para 350
+            width=700,   # Aumente a largura para 700
+            xaxis_title="Date",
+            yaxis_title="Normalized Price",
+        )
+        st.plotly_chart(fig_line, use_container_width=True)
 
     with col2:
         st.subheader("Risk-Return")
-        fig = px.scatter(
+        fig_scatter = px.scatter(
             x=vols,
             y=rets,
             text=vols.index,
             color=rets / vols,
             color_continuous_scale=px.colors.sequential.Bluered_r
         )
-        fig.update_traces(
+        fig_scatter.update_traces(
             textfont_color='white',
             marker=dict(size=80),  # Aumente o tamanho dos marcadores
             textfont_size=10,
         )
-        fig.layout.yaxis.title = 'Total Return'
-        fig.layout.xaxis.title = 'Annualized Volatility'
+        fig_scatter.layout.yaxis.title = 'Total Return'
+        fig_scatter.layout.xaxis.title = 'Annualized Volatility'
         
-        # Aumente a altura e a largura do gráfico aqui
-        fig.update_layout(
-            height=1000,  # Aumente a altura para 350
-            width=10000,   # Aumente a largura para 700
+        fig_scatter.update_layout(
+            height=350,  # Aumente a altura para 350
+            width=700,   # Aumente a largura para 700
         )
 
-        fig.layout.xaxis.tickformat = ".0%"
-        fig.layout.yaxis.tickformat = ".0%"
-        fig.layout.coloraxis.colorbar.title = 'Sharpe'
-        st.plotly_chart(fig, use_container_width=True)
+        fig_scatter.layout.xaxis.tickformat = ".0%"
+        fig_scatter.layout.yaxis.tickformat = ".0%"
+        fig_scatter.layout.coloraxis.colorbar.title = 'Sharpe'
+        st.plotly_chart(fig_scatter, use_container_width=True)
 
 # Sidebar
 with st.sidebar:
