@@ -60,7 +60,8 @@ def build_main(tickers, prices):
     col1, col2 = st.columns(2, gap='large')
     with col1:
         st.subheader("Relative Performance")
-        st.line_chart(norm_prices, height=400, use_container_width=True)  # Aumenta a altura do gráfico e ajusta a largura
+        # Aumente a altura e a largura do gráfico aqui
+        st.line_chart(norm_prices, height=600, use_container_width=True)  # Aumente a altura para 600
 
     with col2:
         st.subheader("Risk-Return")
@@ -78,8 +79,11 @@ def build_main(tickers, prices):
         )
         fig.layout.yaxis.title = 'Total Return'
         fig.layout.xaxis.title = 'Annualized Volatility'
-        fig.layout.height = 400  # Aumenta a altura do gráfico
-        fig.layout.width = 800  # Define a largura do gráfico
+        
+        # Aumente a altura e a largura do gráfico aqui
+        fig.layout.height = 600  # Aumente a altura para 600
+        fig.layout.width = 1000  # Aumente a largura para 1000
+
         fig.layout.xaxis.tickformat = ".0%"
         fig.layout.yaxis.tickformat = ".0%"
         fig.layout.coloraxis.colorbar.title = 'Sharpe'
