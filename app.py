@@ -83,8 +83,8 @@ def build_main(tickers, prices):
         
         # Aumente a altura e a largura do gráfico aqui
         fig.update_layout(
-            height=350,  # Aumente a altura para 350
-            width=700,   # Aumente a largura para 700
+            height=900,  # Aumente a altura para 350
+            width=1000,   # Aumente a largura para 700
         )
 
         fig.layout.xaxis.tickformat = ".0%"
