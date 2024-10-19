@@ -36,12 +36,11 @@ def build_main(tickers, prices):
     vols = returns.std() * np.sqrt(252)
     rets = (norm_prices.iloc[-1] - 100) / 100
 
-    # Adicionando espaço para as métricas
-    st.subheader("Performance Metrics")
+    # Ajustando o layout com mais espaço
     mygrid = grid(5, 5, 5, 5, 5, 5, vertical_align="top")
     for t in prices.columns:
         c = mygrid.container(border=True)
-        c.subheader(t.rstrip(".SA"), divider="red")
+        c.subheader(t.rstrip(".SA"), divider="red")  # Remove ".SA" do título
         colA, colB, colC = c.columns(3)
 
         if t == "portfolio":
@@ -55,6 +54,7 @@ def build_main(tickers, prices):
         colC.metric(label="Volatility", value=f"{vols[t]:.0%}")
         style_metric_cards(background_color='rgba(255,255,255,0)')
 
+    # Ajustando os gráficos para melhor visualização
     col1, col2 = st.columns(2, gap='large')
     with col1:
         st.subheader("Relative Performance")
