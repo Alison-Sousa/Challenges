@@ -9,7 +9,31 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
 # Configuração da página deve ser a primeira coisa a ser chamada
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="Python for Investors", initial_sidebar_state="expanded")
+
+# Definindo o tema claro
+st.markdown(
+    """
+    <style>
+        .css-1x8a4t8 {
+            background-color: #ffffff !important;
+        }
+        .css-1aumxhk {
+            background-color: #ffffff !important;
+        }
+        .css-ffhzg2 {
+            background-color: #ffffff !important;
+        }
+        .css-1t8l2bq {
+            color: #000000 !important;
+        }
+        .css-1rjwvpk {
+            color: #000000 !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Title of the application
 st.title("Python for Investors")
