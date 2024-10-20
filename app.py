@@ -8,12 +8,14 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
 def build_sidebar():
-    # Carrega o arquivo CSV e verifica as colunas
-    ticker_list = pd.read_csv("tickers.csv", index_col=0)
-    st.write(ticker_list.columns)  # Para verificar as colunas disponíveis
+    st.image("images/logo-250-100-transparente.png")
+    
+    # Carrega o arquivo CSV e imprime as colunas
+    ticker_list = pd.read_csv("tickers.csv", header=None, index_col=0)  # Sem cabeçalho, usa a primeira coluna como índice
+    st.write("Colunas disponíveis no CSV:", ticker_list)  # Imprime as colunas para verificar
 
-    # Filtra para remover possíveis zeros
-    options = ticker_list['tickers'].tolist()
+    # Pega os tickers da primeira coluna
+    options = ticker_list.iloc[:, 0].tolist()  # A primeira coluna tem os tickers
     options = [t for t in options if t != '0']  # Remove '0' da lista
 
     tickers = st.multiselect(label="Selecione as Empresas", options=options, placeholder='Códigos')
