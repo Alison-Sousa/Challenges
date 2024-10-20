@@ -9,34 +9,8 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
 # Configuração da página deve ser a primeira coisa a ser chamada
-st.set_page_config(layout="wide", page_title="Python for Investors")
+st.set_page_config(layout="wide")
 
-st.markdown(
-    """
-    <style>
-        /* Sidebar inteira com fundo claro */
-        .stSidebar {
-            background-color: #FFFFFF; /* Fundo branco para a sidebar */
-            color: #000000; /* Texto preto na sidebar */
-        }
-        /* Texto dentro da sidebar */
-        .stSidebar p, .stSidebar label, .stSidebar div {
-            color: #000000; /* Texto preto */
-        }
-        /* Ajustando a barra de seleção para ter fundo branco */
-        .stMultiSelect, .stSelectbox, .stCheckbox {
-            background-color: #FFFFFF; /* Fundo branco para as barras de seleção */
-            color: #000000; /* Texto preto */
-        }
-        /* Estilizando o logo na sidebar */
-        .stSidebar img {
-            background-color: #FFFFFF; /* Fundo branco para a imagem */
-            padding: 10px; /* Espaçamento para a imagem */
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 # Title of the application
 st.title("Python for Investors")
 
