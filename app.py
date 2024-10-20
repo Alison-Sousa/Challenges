@@ -60,7 +60,7 @@ def build_main(tickers, prices):
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         logo_url = None
 
-        # Usa a imagem "B3.png" para IBOVESPA e portfólio
+        # Define a imagem apenas para o IBOVESPA e o portfólio
         if ticker_clean == "IBOVESPA":
             logo_url = "B3.png"  # Logo da B3
         elif ticker_clean == "portfolio":
