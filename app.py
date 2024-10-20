@@ -29,14 +29,16 @@ def build_sidebar():
                 st.error("Não foram encontrados dados para os tickers selecionados.")
                 return None, None
             
+            # Renomeia a coluna "^BVSP" para "IBOVESPA"
+            prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
+            
             if len(tickers) == 1:
                 prices = prices.to_frame()
                 prices.columns = [tickers[0].rstrip(".SA")]
 
-            # Substitui "^BVSP" por "IBOVESPA" nos dados
+            # Remove a extensão .SA dos tickers
             prices.columns = prices.columns.str.rstrip(".SA")
-            prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
-            
+
             return tickers, prices
         
         except Exception as e:
@@ -65,8 +67,10 @@ def build_main(tickers, prices):
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         
         # Definindo a URL da imagem corretamente
-        if ticker_clean in ["IBOVESPA", "portfolio"]:
-            logo_url = "B3.png"  # Logo da B3 para ambos
+        if ticker_clean == "IBOVESPA":
+            logo_url = "B3.png"  # Logo da B3 para IBOVESPA
+        elif ticker_clean == "portfolio":
+            logo_url = "B3.png"  # Ícone de portfólio
         else:
             stock_info = yf.Ticker(ticker_clean).info
             logo_url = stock_info.get('logo_url', None)
