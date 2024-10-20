@@ -32,8 +32,11 @@ def build_sidebar():
     return None, None
 
 def build_main(tickers, prices):
+    # Verifica se a coluna do índice está presente
+    index_col = "^BVSP" if "^BVSP" in prices.columns else prices.columns[-1]
+    
     weights = np.ones(len(tickers)) / len(tickers)
-    prices['portfolio'] = prices.drop("IBOV", axis=1) @ weights
+    prices['portfolio'] = prices.drop(index_col, axis=1) @ weights
     norm_prices = 100 * prices / prices.iloc[0]
     returns = prices.pct_change()[1:]
     vols = returns.std() * np.sqrt(252)
