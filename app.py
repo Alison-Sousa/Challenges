@@ -8,9 +8,10 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
 def build_sidebar():
-    st.title("Select Companies")
     # Add the logo.svg image in the sidebar
     st.sidebar.image("itau.svg", use_column_width=True)
+    st.title("Select Companies")
+   
     
     # Load the CSV file and print the columns
     ticker_list = pd.read_csv("tickers.csv", header=None)  # No header
