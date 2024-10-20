@@ -61,13 +61,14 @@ def build_main(tickers, prices):
         c.subheader(ticker, divider="red")
         colA, colB, colC = c.columns(3)
 
-        # Obtém o logotipo
-        if ticker == "portfolio":
-            colA.image("dollar.svg", width=50)  # Logotipo do portfólio
-        elif ticker == "IBOVESPA":
-            colA.image("B3.svg", width=50)  # Logotipo do IBOVESPA (supondo que seja SVG)
+        # Tenta obter o logotipo da empresa
+        ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
+
+        if ticker_clean == "IBOVESPA":
+            colA.image("B3.png", width=50)  # Logotipo da B3
+        elif ticker_clean == "portfolio":
+            colA.image("dollar.svg", width=50)  # Ícone de portfólio
         else:
-            ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
             stock_info = yf.Ticker(ticker_clean).info
             logo_url = stock_info.get('logo_url', None)
 
