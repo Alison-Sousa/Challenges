@@ -66,7 +66,7 @@ def build_main(tickers, prices):
         logo_url = None
 
         if ticker_clean == "IBOVESPA":
-            logo_url = "https://upload.wikimedia.org/wikipedia/commons/8/8d/B3_logo_Brasil.png"  # Logo da B3
+            logo_url = "https://upload.wikimedia.org/wikipedia/commons/d/d7/B3_logo.png"  # Logo da B3
         elif ticker_clean == "portfolio":
             logo_url = "https://www.iconpacks.net/icons/2/free-portfolio-icon-2427-thumb.png"  # Ícone de portfólio
         else:
