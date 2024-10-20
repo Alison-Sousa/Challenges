@@ -14,7 +14,7 @@ st.set_page_config(layout="wide", page_title="Python for Investors", initial_sid
 st.markdown(
     """
     <style>
-        /* Sidebar com fundo claro e texto escuro */
+        /* Sidebar inteira com fundo claro */
         .stSidebar {
             background-color: #FFFFFF; /* Fundo branco para a sidebar */
             color: #000000; /* Texto preto na sidebar */
@@ -28,8 +28,10 @@ st.markdown(
             background-color: #FFFFFF; /* Fundo branco para as barras de seleção */
             color: #000000; /* Texto preto */
         }
-        .stMultiSelect div, .stSelectbox div, .stCheckbox div {
-            color: #000000; /* Texto preto */
+        /* Estilizando o logo na sidebar */
+        .stSidebar img {
+            background-color: #FFFFFF; /* Fundo branco para a imagem */
+            padding: 10px; /* Espaçamento para a imagem */
         }
     </style>
     """,
