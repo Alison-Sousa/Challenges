@@ -11,24 +11,16 @@ from streamlit_extras.grid import grid
 # Configuração da página deve ser a primeira coisa a ser chamada
 st.set_page_config(layout="wide", page_title="Python for Investors", initial_sidebar_state="expanded")
 
-# Definindo o tema claro
+# Definindo o tema claro com CSS
 st.markdown(
     """
     <style>
-        .css-1x8a4t8 {
-            background-color: #ffffff !important;
+        body {
+            background-color: #FFFFFF; /* Cor de fundo clara */
+            color: #000000; /* Cor do texto preta */
         }
-        .css-1aumxhk {
-            background-color: #ffffff !important;
-        }
-        .css-ffhzg2 {
-            background-color: #ffffff !important;
-        }
-        .css-1t8l2bq {
-            color: #000000 !important;
-        }
-        .css-1rjwvpk {
-            color: #000000 !important;
+        .stApp {
+            background-color: #FFFFFF; /* Cor de fundo clara para o aplicativo */
         }
     </style>
     """,
