@@ -8,6 +8,9 @@ import requests
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
+# Configuração da página deve ser a primeira coisa a ser chamada
+st.set_page_config(layout="wide")
+
 # Title of the application
 st.title("Python for Investors")
 
@@ -119,8 +122,6 @@ def build_main(tickers, prices):
         fig.layout.yaxis.tickformat = ".0%"
         fig.layout.coloraxis.colorbar.title = 'Sharpe'
         st.plotly_chart(fig, use_container_width=True)
-
-st.set_page_config(layout="wide")
 
 with st.sidebar:
     tickers, prices = build_sidebar()
