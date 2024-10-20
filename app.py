@@ -54,44 +54,37 @@ def build_main(tickers, prices):
     returns = prices.pct_change()[1:]
     vols = returns.std() * np.sqrt(252)
     rets = (norm_prices.iloc[-1] - 100) / 100
-mygrid = grid(5, 5, 5, 5, 5, 5, vertical_align="top")
-for ticker in prices.columns:
-    c = mygrid.container(border=True)
-    c.subheader(ticker, divider="red")
-    colA, colB, colC = c.columns(3)
 
-    # Limpa o ticker, removendo a extensão .SA
-    ticker_clean = ticker.rstrip('.SA')
-    logo_url = None
+    mygrid = grid(5, 5, 5, 5, 5, 5, vertical_align="top")
+    for ticker in prices.columns:
+        c = mygrid.container(border=True)
+        c.subheader(ticker, divider="red")
+        colA, colB, colC = c.columns(3)
 
-    if ticker_clean == "IBOVESPA":
-        try:
-            # Verifica se a imagem da B3 está no caminho correto
-            colA.image("B3.png", width=50)  # Logo da B3
-        except Exception as e:
-            # Mostra uma mensagem de erro caso a imagem não possa ser carregada
-            colA.write(f"Erro ao carregar logo da B3: {str(e)}")
-    elif ticker_clean == "portfolio":
-        logo_url = "https://www.iconpacks.net/icons/2/free-portfolio-icon-2427-thumb.png"  # Ícone de portfólio
-    else:
-        stock_info = yf.Ticker(ticker_clean).info
-        logo_url = stock_info.get('logo_url', None)
-        if not logo_url:
-            logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
+        # Tenta obter a URL do logotipo da empresa
+        ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
+        logo_url = None
 
-    if logo_url:
-        colA.image(logo_url, width=50)  # Exibe o logotipo
-    else:
-        colA.write("🔍 Logo não disponível")
+        if ticker_clean == "IBOVESPA":
+            logo_url = "https://upload.wikimedia.org/wikipedia/commons/8/8d/B3_logo_Brasil.png"  # Logo da B3
+        elif ticker_clean == "portfolio":
+            logo_url = "https://www.iconpacks.net/icons/2/free-portfolio-icon-2427-thumb.png"  # Ícone de portfólio
+        else:
+            stock_info = yf.Ticker(ticker_clean).info
+            logo_url = stock_info.get('logo_url', None)
+            if not logo_url:
+                logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
 
-    colA.write(f"🏢 {ticker_clean}")
+        if logo_url:
+            colA.image(logo_url, width=50)  # Exibe o logotipo
+        else:
+            colA.write("🔍 Logo não disponível")
 
-    colB.metric(label="Return", value=f"{rets[ticker]:.0%}")
-    colC.metric(label="Volatility", value=f"{vols[ticker]:.0%}")
+        colA.write(f"🏢 {ticker_clean}")
 
-# Estilo das métricas
-style_metric_cards(background_color='rgba(255,255,255,0)')
-
+        colB.metric(label="Return", value=f"{rets[ticker]:.0%}")
+        colC.metric(label="Volatility", value=f"{vols[ticker]:.0%}")
+        style_metric_cards(background_color='rgba(255,255,255,0)')
 
     col1, col2 = st.columns(2, gap='large')
     with col1:
