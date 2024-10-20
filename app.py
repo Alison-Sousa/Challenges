@@ -72,7 +72,7 @@ def build_main(tickers, prices):
                 logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
 
         if logo_url:
-            colA.image(logo_url, width=50)  # Exibe o logotipo
+            colA.image(logo_url, width=100)  # Ajustei a largura da imagem para 100
         else:
             colA.write("🔍 Logo não disponível")
 
