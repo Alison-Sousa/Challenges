@@ -9,7 +9,7 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
 # Configuração da página deve ser a primeira coisa a ser chamada
-st.set_page_config(layout="wide", page_title="Python for Investors", initial_sidebar_state="expanded")
+st.set_page_config(layout="wide", page_title="Python for Investors")
 
 st.markdown(
     """
