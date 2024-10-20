@@ -32,8 +32,12 @@ def build_sidebar():
                 prices = prices.to_frame()
                 prices.columns = [tickers[0].rstrip(".SA")]
 
+            # Renomeando para IBOVESPA
             prices.columns = prices.columns.str.rstrip(".SA")
             prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
+            
+            # Verificação dos tickers renomeados
+            st.write(prices.columns)  # Adicionando esta linha para verificar os nomes dos tickers
             
             return tickers, prices
         
