@@ -22,11 +22,9 @@ def build_sidebar():
     end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
 
     if tickers:
-        # Tenta fazer o download dos preços e verifica se o resultado é válido
         try:
             prices = yf.download(tickers + ["^BVSP"], start=start_date, end=end_date)["Adj Close"]
             
-            # Garante que 'prices' seja um DataFrame válido
             if prices.empty:
                 st.error("Não foram encontrados dados para os tickers selecionados.")
                 return None, None
@@ -35,7 +33,10 @@ def build_sidebar():
                 prices = prices.to_frame()
                 prices.columns = [tickers[0].rstrip(".SA")]
 
+            # Substitui "^BVSP" por "IBOVESPA" nos dados
             prices.columns = prices.columns.str.rstrip(".SA")
+            prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
+            
             return tickers, prices
         
         except Exception as e:
@@ -45,7 +46,7 @@ def build_sidebar():
     return None, None
 
 def build_main(tickers, prices):
-    index_col = "^BVSP" if "^BVSP" in prices.columns else prices.columns[-1]
+    index_col = "IBOVESPA" if "IBOVESPA" in prices.columns else prices.columns[-1]
     
     weights = np.ones(len(tickers)) / len(tickers)
     prices['portfolio'] = prices.drop(index_col, axis=1) @ weights
@@ -62,17 +63,22 @@ def build_main(tickers, prices):
 
         # Tenta obter a URL do logotipo da empresa
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
-        stock_info = yf.Ticker(ticker_clean).info  # Obtém informações da empresa
-        logo_url = stock_info.get('logo_url', None)  # Tenta obter a URL do logotipo
+        logo_url = None
 
-        # Se não conseguir, tenta uma URL padrão do GitHub
-        if not logo_url:
-            logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'
-        
+        if ticker_clean == "IBOVESPA":
+            logo_url = "https://upload.wikimedia.org/wikipedia/commons/8/8d/B3_logo_Brasil.png"  # Logo da B3
+        elif ticker_clean == "portfolio":
+            logo_url = "https://www.iconpacks.net/icons/2/free-portfolio-icon-2427-thumb.png"  # Ícone de portfólio
+        else:
+            stock_info = yf.Ticker(ticker_clean).info
+            logo_url = stock_info.get('logo_url', None)
+            if not logo_url:
+                logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
+
         if logo_url:
             colA.image(logo_url, width=50)  # Exibe o logotipo
         else:
-            colA.write("🔍 Logo não disponível")  # Mensagem caso o logotipo não esteja disponível
+            colA.write("🔍 Logo não disponível")
 
         colA.write(f"🏢 {ticker_clean}")
 
