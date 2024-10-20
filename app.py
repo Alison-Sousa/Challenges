@@ -3,7 +3,6 @@ import streamlit as st
 import yfinance as yf
 import numpy as np
 import plotly.express as px
-import plotly.graph_objects as go
 from datetime import datetime
 
 # Função para construir a barra lateral
@@ -59,50 +58,35 @@ def build_main(tickers, prices):
 
     st.write("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)  # Espaço entre os gráficos
 
-    col1, col2 = st.columns(2)
+    # Cria colunas para os gráficos com espaço
+    col1, col2 = st.columns(2, gap='large')
 
     with col1:
-        st.subheader("Relative Performance")
-        # Usando plotly para o gráfico de linha
-        fig_line = go.Figure()
-        for column in norm_prices.columns:
-            fig_line.add_trace(go.Scatter(x=norm_prices.index, y=norm_prices[column], mode='lines', name=column))
-        
-        fig_line.update_layout(
-            height=400,  # Aumente a altura para 400
-            width=2000,   # Aumente a largura para 900
-            xaxis_title="Date",
-            yaxis_title="Normalized Price",
-            legend=dict(x=0, y=1)  # Ajuste a posição da legenda
-        )
-        st.plotly_chart(fig_line, use_container_width=True)
+        st.subheader("Desempenho Relativo")
+        # Usando Streamlit para o gráfico de linha com maior altura
+        st.line_chart(norm_prices, height=600)
 
     with col2:
-        st.subheader("Risk-Return")
-        fig_scatter = px.scatter(
+        st.subheader("Risco-Retorno")
+        fig = px.scatter(
             x=vols,
             y=rets,
             text=vols.index,
             color=rets / vols,
             color_continuous_scale=px.colors.sequential.Bluered_r
         )
-        fig_scatter.update_traces(
+        fig.update_traces(
             textfont_color='white',
-            marker=dict(size=10),  # Aumente o tamanho dos marcadores
-            textfont_size=12,
+            marker=dict(size=45),  # Aumente o tamanho dos marcadores
+            textfont_size=10,
         )
-        fig_scatter.layout.yaxis.title = 'Total Return'
-        fig_scatter.layout.xaxis.title = 'Annualized Volatility'
-        
-        fig_scatter.update_layout(
-            height=400,  # Aumente a altura para 400
-            width=900,   # Aumente a largura para 900
-        )
-
-        fig_scatter.layout.xaxis.tickformat = ".0%"
-        fig_scatter.layout.yaxis.tickformat = ".0%"
-        fig_scatter.layout.coloraxis.colorbar.title = 'Sharpe'
-        st.plotly_chart(fig_scatter, use_container_width=True)
+        fig.layout.yaxis.title = 'Retorno Total'
+        fig.layout.xaxis.title = 'Volatilidade (anualizada)'
+        fig.layout.height = 600  # Aumente a altura do gráfico de dispersão
+        fig.layout.xaxis.tickformat = ".0%"
+        fig.layout.yaxis.tickformat = ".0%"
+        fig.layout.coloraxis.colorbar.title = 'Sharpe'
+        st.plotly_chart(fig, use_container_width=True)
 
 # Sidebar
 with st.sidebar:
