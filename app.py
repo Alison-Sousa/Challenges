@@ -62,9 +62,9 @@ def build_main(tickers, prices):
         logo_url = None
 
         if ticker == "^BVSP":
-            logo_url = "B3.png"  # Logo da B3 para IBOVESPA
+            logo_url = "bov.png"  # Logo da B3 para IBOVESPA
         elif ticker == "portfolio":
-            logo_url = "B3.png"  # Ícone de portfólio
+            logo_url = "chart.svg"  # Ícone de portfólio
         else:
             stock_info = yf.Ticker(ticker_clean).info
             logo_url = stock_info.get('logo_url', None)
