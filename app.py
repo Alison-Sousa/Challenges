@@ -65,10 +65,8 @@ def build_main(tickers, prices):
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         
         # Definindo a URL da imagem corretamente
-        if ticker_clean == "IBOVESPA":
-            logo_url = "B3.png"  # Logo da B3
-        elif ticker_clean == "portfolio":
-            logo_url = "dollar.svg"  # Ícone de portfólio
+        if ticker_clean in ["IBOVESPA", "portfolio"]:
+            logo_url = "B3.png"  # Logo da B3 para ambos
         else:
             stock_info = yf.Ticker(ticker_clean).info
             logo_url = stock_info.get('logo_url', None)
@@ -76,10 +74,7 @@ def build_main(tickers, prices):
                 logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
 
         # Exibindo a imagem do logotipo
-        if logo_url:
-            colA.image(logo_url, width=50)  # Exibe o logotipo
-        else:
-            colA.write("🔍 Logo não disponível")
+        colA.image(logo_url, width=50)  # Exibe o logotipo
 
         colA.write(f"🏢 {ticker_clean}")
 
