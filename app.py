@@ -4,17 +4,27 @@ import numpy as np
 import yfinance as yf
 import plotly.express as px
 from datetime import datetime
+import requests
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
-def build_sidebar():
-   
-    st.title("Select Companies")
-   
-    # Load the CSV file and print the columns
+# Title of the application
+st.title("Python for Investors")
+
+# Add the itau.svg image in the sidebar
+st.sidebar.image("itau.svg", use_column_width=True)
+
+@st.cache_data
+def get_tickers():
+    """Get the list of tickers from the CSV file."""
     ticker_list = pd.read_csv("tickers.csv", header=None)  # No header
     options = ticker_list.iloc[:, 1].tolist()  # The second column contains the tickers (ignores index 0)
     options = [t for t in options if t != '0']  # Remove '0' from the list
+    return options
+
+def build_sidebar():
+    options = get_tickers()  # Fetch the tickers
+    st.title("Select Companies")
 
     tickers = st.multiselect(label="Select Companies", options=options, placeholder='Codes')
     tickers = [t + ".SA" for t in tickers]  # Append the .SA suffix only for selected tickers
@@ -115,6 +125,5 @@ st.set_page_config(layout="wide")
 with st.sidebar:
     tickers, prices = build_sidebar()
 
-st.title('Python for Investors')
 if tickers:
     build_main(tickers, prices)
