@@ -10,15 +10,16 @@ from streamlit_extras.grid import grid
 def build_sidebar():
     st.title("Select Companies")
     
-    ticker_list = pd.read_csv("tickers.csv", header=None)
-    options = ticker_list.iloc[:, 1].tolist()
-    options = [t for t in options if t != '0']
+    # Load the CSV file and print the columns
+    ticker_list = pd.read_csv("tickers.csv", header=None)  # No header
+    options = ticker_list.iloc[:, 1].tolist()  # The second column contains the tickers (ignores index 0)
+    options = [t for t in options if t != '0']  # Remove '0' from the list
 
     tickers = st.multiselect(label="Select Companies", options=options, placeholder='Codes')
-    tickers = [t + ".SA" for t in tickers]
+    tickers = [t + ".SA" for t in tickers]  # Append the .SA suffix only for selected tickers
 
     start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
-    end_date = st.date_input("To", format="today")
+    end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
 
     if tickers:
         try:
@@ -32,6 +33,7 @@ def build_sidebar():
                 prices = prices.to_frame()
                 prices.columns = [tickers[0].rstrip(".SA")]
 
+            # Substitui "^BVSP" por "IBOVESPA" nos dados
             prices.columns = prices.columns.str.rstrip(".SA")
             prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
             
@@ -59,22 +61,19 @@ def build_main(tickers, prices):
         c.subheader(ticker, divider="red")
         colA, colB, colC = c.columns(3)
 
-        ticker_clean = ticker.rstrip('.SA')
+        # Tenta obter a URL do logotipo da empresa
+        ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         logo_url = None
 
         if ticker_clean == "IBOVESPA":
-            logo_url = "https://www.b3.com.br/en_us/market-data-and-indices/information-on-ibovespa/ibovespa.htm"  # URL para página da B3
+            logo_url = "https://upload.wikimedia.org/wikipedia/commons/8/8d/B3_logo_Brasil.png"  # Logo da B3
         elif ticker_clean == "portfolio":
-            logo_url = "https://example.com/url_do_logo_portfolio"  # URL para o ícone de portfólio (substitua pela URL correta)
+            logo_url = "https://www.iconpacks.net/icons/2/free-portfolio-icon-2427-thumb.png"  # Ícone de portfólio
         else:
-            try:
-                stock_info = yf.Ticker(ticker_clean).info
-                logo_url = stock_info.get('logo_url')
-                if not logo_url:
-                    logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'
-            except Exception as e:
-                st.write(f"Erro ao obter logo para {ticker_clean}: {e}")
-                logo_url = f"https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png"
+            stock_info = yf.Ticker(ticker_clean).info
+            logo_url = stock_info.get('logo_url', None)
+            if not logo_url:
+                logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
 
         if logo_url:
             colA.image(logo_url, width=50)  # Exibe o logotipo
