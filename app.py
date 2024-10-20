@@ -59,14 +59,16 @@ def build_main(tickers, prices):
 
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
 
+        # Lógica para obter a URL do logotipo
         if ticker_clean == "IBOVESPA":
             colA.image("B3.png", width=50)  # Imagem do IBOVESPA
-        elif ticker_clean == "portfolio":
-            colA.image("B3.png", width=50)  # Ícone de portfólio
         else:
             stock_info = yf.Ticker(ticker_clean).info
             logo_url = stock_info.get('logo_url', None)
-            colA.image(logo_url if logo_url else "B3.png", width=50)  # Exibe logotipo ou padrão
+            if logo_url:
+                colA.image(logo_url, width=50)  # Exibe logotipo da empresa
+            else:
+                colA.write("🔍 Logo não disponível")  # Se não houver logo
 
         colA.write(f"🏢 {ticker_clean}")
         colB.metric(label="Return", value=f"{rets[ticker]:.0%}")
