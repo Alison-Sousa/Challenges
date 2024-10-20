@@ -66,14 +66,14 @@ def build_main(tickers, prices):
         logo_url = None
 
         if ticker_clean == "IBOVESPA":
-            logo_url = "https://upload.wikimedia.org/wikipedia/commons/d/d7/B3_logo.png"  # Logo do IBOVESPA (B3)
+            logo_url = "images/b3_logo.png"  # Logo local do IBOVESPA (arquivo de imagem salvo localmente)
         elif ticker_clean == "portfolio":
-            logo_url = "https://cdn-icons-png.flaticon.com/512/25/25694.png"  # Ícone genérico para portfólio
+            logo_url = "images/portfolio_icon.png"  # Ícone de portfólio (imagem circular com furo no meio)
         else:
             stock_info = yf.Ticker(ticker_clean).info
             logo_url = stock_info.get('logo_url', None)
             if not logo_url:
-                logo_url = f'https://cdn-icons-png.flaticon.com/512/1828/1828884.png'  # Ícone padrão genérico
+                logo_url = f'images/default_icon.png'  # Imagem padrão local
 
         if logo_url:
             colA.image(logo_url, width=50)  # Exibe o logotipo
