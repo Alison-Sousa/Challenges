@@ -1,30 +1,26 @@
-import pandas as pd
 import streamlit as st
-import yfinance as yf
+import pandas as pd
 import numpy as np
+import yfinance as yf
 import plotly.express as px
 from datetime import datetime
+from streamlit_extras.metric_cards import style_metric_cards
+from streamlit_extras.grid import grid
 
 # Função para construir a barra lateral
 def build_sidebar():
-    # Lê o CSV sem cabeçalho e ignora a primeira linha
-    ticker_list = pd.read_csv("tickers.csv", header=None, skiprows=1)  # Ignora a primeira linha
-    ticker_list.columns = ["Index", "Ticker"]  # Renomeia as colunas
-
-    # Usa a segunda coluna para seleção de tickers
-    tickers = st.multiselect(label="Select Companies", options=ticker_list["Ticker"].tolist(), placeholder='Select a ticker')  
+    ticker_list = pd.read_csv("tickers.csv", index_col=0)  # Alterado para tickers.csv
+    tickers = st.multiselect(label="Selecione as Empresas", options=ticker_list['tickers'].tolist(), placeholder='Códigos')  # Corrigido para usar a coluna correta
     tickers = [t + ".SA" for t in tickers]
-
-    # Data de início e fim
-    start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
-    end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
+    start_date = st.date_input("De", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
+    end_date = st.date_input("Até", format="DD/MM/YYYY", value="today")
 
     if tickers:
         prices = yf.download(tickers, start=start_date, end=end_date)["Adj Close"]
         if len(tickers) == 1:
             prices = prices.to_frame()
             prices.columns = [tickers[0].rstrip(".SA")]
-
+                    
         prices.columns = prices.columns.str.rstrip(".SA")
         prices['IBOV'] = yf.download("^BVSP", start=start_date, end=end_date)["Adj Close"]
         return tickers, prices
@@ -39,31 +35,27 @@ def build_main(tickers, prices):
     vols = returns.std() * np.sqrt(252)
     rets = (norm_prices.iloc[-1] - 100) / 100
 
-    st.write("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)  # Espaço entre a sidebar e o conteúdo
-
-    # Títulos menores para os gráficos
+    mygrid = grid(5, 5, 5, 5, 5, 5, vertical_align="top")
     for t in prices.columns:
-        st.write(f"<h4 style='margin-top: 20px; font-size: 20px;'>{t.rstrip('.SA')}</h4>", unsafe_allow_html=True)  # Títulos em negrito e tamanho menor
-        col1, col2, col3 = st.columns(3)
+        c = mygrid.container(border=True)
+        c.subheader(t, divider="red")
+        colA, colB, colC = c.columns(3)
 
+        # Removendo imagens e usando texto
         if t == "portfolio":
-            col1.write("📊 Portfolio")
+            colA.write("📊 Portfolio")
         elif t == "IBOV":
-            col1.write("📈 IBOV")
+            colA.write("📈 IBOV")
         else:
-            col1.write(f"🏢 {t.rstrip('.SA')}")
+            colA.write(f"🏢 {t.rstrip('.SA')}")
 
-        col2.metric(label="Return", value=f"{rets[t]:.0%}", delta_color="normal")
-        col3.metric(label="Volatility", value=f"{vols[t]:.0%}", delta_color="normal")
+        colB.metric(label="Retorno", value=f"{rets[t]:.0%}")
+        colC.metric(label="Volatilidade", value=f"{vols[t]:.0%}")
+        style_metric_cards(background_color='rgba(255,255,255,0)')
 
-    st.write("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)  # Espaço entre os gráficos
-
-    # Cria colunas para os gráficos com espaço
     col1, col2 = st.columns(2, gap='large')
-
     with col1:
         st.subheader("Desempenho Relativo")
-        # Usando Streamlit para o gráfico de linha com maior altura
         st.line_chart(norm_prices, height=600)
 
     with col2:
@@ -77,25 +69,25 @@ def build_main(tickers, prices):
         )
         fig.update_traces(
             textfont_color='white',
-            marker=dict(size=45),  # Aumente o tamanho dos marcadores
+            marker=dict(size=45),
             textfont_size=10,
         )
         fig.layout.yaxis.title = 'Retorno Total'
         fig.layout.xaxis.title = 'Volatilidade (anualizada)'
-        fig.layout.height = 600  # Aumente a altura do gráfico de dispersão
+        fig.layout.height = 600
         fig.layout.xaxis.tickformat = ".0%"
         fig.layout.yaxis.tickformat = ".0%"
         fig.layout.coloraxis.colorbar.title = 'Sharpe'
         st.plotly_chart(fig, use_container_width=True)
 
-# Sidebar
+# Configuração da página
+st.set_page_config(layout="wide")
+
+# Barra lateral
 with st.sidebar:
-    st.title("Quant Challenge")
     tickers, prices = build_sidebar()
 
 # Título da página principal
-st.title('Python for Investors')
-
-# Se houver tickers selecionados, exibe o painel
+st.title('Python para Investidores')
 if tickers:
     build_main(tickers, prices)
