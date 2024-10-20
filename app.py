@@ -8,13 +8,10 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
 def build_sidebar():
-    st.image("images/logo-250-100-transparente.png")
+    st.title("Selecionar Empresas")
     
     # Carrega o arquivo CSV e imprime as colunas
-    ticker_list = pd.read_csv("tickers.csv", header=None, index_col=0)  # Sem cabeçalho, usa a primeira coluna como índice
-    st.write("Colunas disponíveis no CSV:", ticker_list)  # Imprime as colunas para verificar
-
-    # Pega os tickers da primeira coluna
+    ticker_list = pd.read_csv("tickers.csv", header=None)  # Sem cabeçalho
     options = ticker_list.iloc[:, 0].tolist()  # A primeira coluna tem os tickers
     options = [t for t in options if t != '0']  # Remove '0' da lista
 
@@ -49,12 +46,8 @@ def build_main(tickers, prices):
         c.subheader(t, divider="red")
         colA, colB, colC = c.columns(3)
 
-        if t == "portfolio":
-            colA.write("📊 Portfolio")
-        elif t == "IBOV":
-            colA.write("📈 IBOV")
-        else:
-            colA.write(f"🏢 {t.rstrip('.SA')}")
+        # Exibe o nome da empresa
+        colA.write(f"🏢 {t.rstrip('.SA')}")
 
         colB.metric(label="Retorno", value=f"{rets[t]:.0%}")
         colC.metric(label="Volatilidade", value=f"{vols[t]:.0%}")
