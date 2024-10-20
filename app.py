@@ -32,10 +32,6 @@ def build_sidebar():
             if len(tickers) == 1:
                 prices = prices.to_frame()
                 prices.columns = [tickers[0].rstrip(".SA")]
-
-            # Substitui "^BVSP" por "IBOVESPA" nos dados
-            prices.columns = prices.columns.str.rstrip(".SA")
-            prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
             
             return tickers, prices
         
@@ -46,8 +42,8 @@ def build_sidebar():
     return None, None
 
 def build_main(tickers, prices):
-    index_col = "IBOVESPA" if "IBOVESPA" in prices.columns else prices.columns[-1]
-    
+    index_col = prices.columns[-1]  # Remove a referência ao IBOVESPA
+
     weights = np.ones(len(tickers)) / len(tickers)
     prices['portfolio'] = prices.drop(index_col, axis=1) @ weights
     norm_prices = 100 * prices / prices.iloc[0]
@@ -65,15 +61,11 @@ def build_main(tickers, prices):
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         logo_url = None
 
-        if ticker_clean == "IBOVESPA":
-            logo_url = "B3.png"  # Logo da B3
-        elif ticker_clean == "portfolio":
-            logo_url = "B3.png"  # Ícone de portfólio
-        else:
-            stock_info = yf.Ticker(ticker_clean).info
-            logo_url = stock_info.get('logo_url', None)
-            if not logo_url:
-                logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
+        # Aqui não haverá mais substituição de logotipo
+        stock_info = yf.Ticker(ticker_clean).info
+        logo_url = stock_info.get('logo_url', None)
+        if not logo_url:
+            logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
 
         if logo_url:
             colA.image(logo_url, width=50)  # Exibe o logotipo
