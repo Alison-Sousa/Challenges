@@ -12,7 +12,7 @@ from streamlit_extras.grid import grid
 st.set_page_config(layout="wide")
 
 # Title of the application
-st.title("Python for Investors")
+st.title("Investment Analysis")
 
 # Add the itau.svg image in the sidebar
 st.sidebar.image("itau.svg", use_column_width=True)
