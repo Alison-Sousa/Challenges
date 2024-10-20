@@ -6,10 +6,10 @@ import plotly.express as px
 from datetime import datetime
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
-
-def build_sidebar():
-    # Add the logo.svg image in the sidebar
+ # Add the logo.svg image in the sidebar
     st.sidebar.image("itau.svg", use_column_width=True)
+def build_sidebar():
+   
     st.title("Select Companies")
    
     
