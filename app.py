@@ -22,13 +22,26 @@ def build_sidebar():
     end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
 
     if tickers:
-        prices = yf.download(tickers + ["^BVSP"], start=start_date, end=end_date)["Adj Close"]
-        if len(tickers) == 1:
-            prices = prices.to_frame()
-            prices.columns = [tickers[0].rstrip(".SA")]
+        # Tenta fazer o download dos preços e verifica se o resultado é válido
+        try:
+            prices = yf.download(tickers + ["^BVSP"], start=start_date, end=end_date)["Adj Close"]
+            
+            # Garante que 'prices' seja um DataFrame válido
+            if prices.empty:
+                st.error("Não foram encontrados dados para os tickers selecionados.")
+                return None, None
+            
+            if len(tickers) == 1:
+                prices = prices.to_frame()
+                prices.columns = [tickers[0].rstrip(".SA")]
 
-        prices.columns = prices.columns.str.rstrip(".SA")
-        return tickers, prices
+            prices.columns = prices.columns.str.rstrip(".SA")
+            return tickers, prices
+        
+        except Exception as e:
+            st.error(f"Erro ao baixar dados: {str(e)}")
+            return None, None
+
     return None, None
 
 def build_main(tickers, prices):
