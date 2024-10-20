@@ -12,11 +12,11 @@ def build_sidebar():
     
     # Carrega o arquivo CSV e imprime as colunas
     ticker_list = pd.read_csv("tickers.csv", header=None)  # Sem cabeçalho
-    options = ticker_list.iloc[:, 0].tolist()  # A primeira coluna tem os tickers
+    options = ticker_list.iloc[:, 1].tolist()  # A segunda coluna tem os tickers (ignora o índice 0)
     options = [t for t in options if t != '0']  # Remove '0' da lista
 
     tickers = st.multiselect(label="Selecione as Empresas", options=options, placeholder='Códigos')
-    tickers = [t + ".SA" for t in tickers]
+    tickers = [t + ".SA" for t in tickers]  # Adiciona o sufixo .SA apenas para tickers selecionados
 
     start_date = st.date_input("De", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
     end_date = st.date_input("Até", format="DD/MM/YYYY", value="today")
