@@ -61,21 +61,24 @@ def build_main(tickers, prices):
         c.subheader(ticker, divider="red")
         colA, colB, colC = c.columns(3)
 
-        # Tenta obter o logotipo da empresa
+        # Tenta obter a URL do logotipo da empresa
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
+        logo_url = None
 
         if ticker_clean == "IBOVESPA":
-            colA.image("B3.png", width=50)  # Logotipo da B3
+            logo_url = "https://upload.wikimedia.org/wikipedia/commons/8/8d/B3_logo_Brasil.png"  # Logo da B3
         elif ticker_clean == "portfolio":
-            colA.image("dollar.svg", width=50)  # Ícone de portfólio
+            logo_url = "https://www.iconpacks.net/icons/2/free-portfolio-icon-2427-thumb.png"  # Ícone de portfólio
         else:
             stock_info = yf.Ticker(ticker_clean).info
             logo_url = stock_info.get('logo_url', None)
+            if not logo_url:
+                logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
 
-            if logo_url:
-                colA.image(logo_url, width=50)  # Exibe o logotipo da empresa
-            else:
-                colA.write("🔍 Logo não disponível")
+        if logo_url:
+            colA.image(logo_url, width=50)  # Exibe o logotipo
+        else:
+            colA.write("🔍 Logo não disponível")
 
         colA.write(f"🏢 {ticker_clean}")
 
