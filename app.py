@@ -65,20 +65,27 @@ def build_main(tickers, prices):
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         logo_url = None
 
-        if ticker_clean == "IBOVESPA":
-            logo_url = "B3.png"  # Logo da B3
-        elif ticker_clean == "portfolio":
-            logo_url = "https://www.iconpacks.net/icons/2/free-portfolio-icon-2427-thumb.png"  # Ícone de portfólio
-        else:
-            stock_info = yf.Ticker(ticker_clean).info
-            logo_url = stock_info.get('logo_url', None)
-            if not logo_url:
-                logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
-
-        if logo_url:
+    if ticker_clean == "IBOVESPA":
+        logo_url = "B3.png"  # Use a imagem local B3.png
+    elif ticker_clean == "portfolio":
+        logo_url = "https://www.iconpacks.net/icons/2/free-portfolio-icon-2427-thumb.png"  # Ícone de portfólio
+    else:
+        stock_info = yf.Ticker(ticker_clean).info
+        logo_url = stock_info.get('logo_url', None)
+        if not logo_url:
+            logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
+    
+    # Agora, ajuste o código para exibir a imagem corretamente
+    if logo_url:
+        try:
             colA.image(logo_url, width=50)  # Exibe o logotipo
-        else:
-            colA.write("🔍 Logo não disponível")
+        except Exception as e:
+            colA.write(f"Erro ao carregar a imagem: {str(e)}")
+    else:
+        colA.write("🔍 Logo não disponível")
+
+
+        
 
         colA.write(f"🏢 {ticker_clean}")
 
