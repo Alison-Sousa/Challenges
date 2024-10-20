@@ -11,16 +11,20 @@ from streamlit_extras.grid import grid
 # Configuração da página deve ser a primeira coisa a ser chamada
 st.set_page_config(layout="wide", page_title="Python for Investors", initial_sidebar_state="expanded")
 
-# Definindo o tema claro com CSS
+# Definindo a sidebar com fundo claro e texto escuro
 st.markdown(
     """
     <style>
-        body {
-            background-color: #FFFFFF; /* Cor de fundo clara */
-            color: #000000; /* Cor do texto preta */
+        /* Sidebar com fundo claro e texto escuro */
+        .css-1d391kg {
+            background-color: #FFFFFF; /* Fundo branco para a sidebar */
+            color: #000000; /* Texto preto na sidebar */
         }
-        .stApp {
-            background-color: #FFFFFF; /* Cor de fundo clara para o aplicativo */
+        .css-1d391kg .stSidebar .stMultiSelect {
+            background-color: #FFFFFF; /* Fundo branco para a barra de seleção */
+        }
+        .css-1d391kg .stSidebar .stMultiSelect div {
+            color: #000000; /* Texto preto na barra de seleção */
         }
     </style>
     """,
