@@ -43,16 +43,23 @@ def build_main(tickers, prices):
     rets = (norm_prices.iloc[-1] - 100) / 100
 
     mygrid = grid(5, 5, 5, 5, 5, 5, vertical_align="top")
-    for t in prices.columns:
+    for ticker in prices.columns:
         c = mygrid.container(border=True)
-        c.subheader(t, divider="red")
+        c.subheader(ticker, divider="red")
         colA, colB, colC = c.columns(3)
 
-        # Display the company name
-        colA.write(f"🏢 {t.rstrip('.SA')}")
+        # Exibe o logotipo da empresa
+        ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
+        stock_info = yf.Ticker(ticker_clean).info  # Obtém informações da empresa
+        logo_url = stock_info.get('logo_url')  # Obtém a URL do logotipo
 
-        colB.metric(label="Return", value=f"{rets[t]:.0%}")
-        colC.metric(label="Volatility", value=f"{vols[t]:.0%}")
+        if logo_url:
+            colA.image(logo_url, width=50)  # Exibe o logotipo
+
+        colA.write(f"🏢 {ticker_clean}")
+
+        colB.metric(label="Return", value=f"{rets[ticker]:.0%}")
+        colC.metric(label="Volatility", value=f"{vols[ticker]:.0%}")
         style_metric_cards(background_color='rgba(255,255,255,0)')
 
     col1, col2 = st.columns(2, gap='large')
