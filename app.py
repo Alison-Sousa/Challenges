@@ -6,13 +6,11 @@ import plotly.express as px
 from datetime import datetime
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
- # Add the logo.svg image in the sidebar
-    st.sidebar.image("itau.svg", use_column_width=True)
+
 def build_sidebar():
    
     st.title("Select Companies")
    
-    
     # Load the CSV file and print the columns
     ticker_list = pd.read_csv("tickers.csv", header=None)  # No header
     options = ticker_list.iloc[:, 1].tolist()  # The second column contains the tickers (ignores index 0)
