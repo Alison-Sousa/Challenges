@@ -7,11 +7,18 @@ from datetime import datetime
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
-# Função para construir a barra lateral
 def build_sidebar():
-    ticker_list = pd.read_csv("tickers.csv", index_col=0)  # Alterado para tickers.csv
-    tickers = st.multiselect(label="Selecione as Empresas", options=ticker_list['tickers'].tolist(), placeholder='Códigos')  # Corrigido para usar a coluna correta
+    # Carrega o arquivo CSV e verifica as colunas
+    ticker_list = pd.read_csv("tickers.csv", index_col=0)
+    st.write(ticker_list.columns)  # Para verificar as colunas disponíveis
+
+    # Filtra para remover possíveis zeros
+    options = ticker_list['tickers'].tolist()
+    options = [t for t in options if t != '0']  # Remove '0' da lista
+
+    tickers = st.multiselect(label="Selecione as Empresas", options=options, placeholder='Códigos')
     tickers = [t + ".SA" for t in tickers]
+
     start_date = st.date_input("De", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
     end_date = st.date_input("Até", format="DD/MM/YYYY", value="today")
 
@@ -20,13 +27,12 @@ def build_sidebar():
         if len(tickers) == 1:
             prices = prices.to_frame()
             prices.columns = [tickers[0].rstrip(".SA")]
-                    
+
         prices.columns = prices.columns.str.rstrip(".SA")
         prices['IBOV'] = yf.download("^BVSP", start=start_date, end=end_date)["Adj Close"]
         return tickers, prices
     return None, None
 
-# Função para construir o conteúdo principal
 def build_main(tickers, prices):
     weights = np.ones(len(tickers)) / len(tickers)
     prices['portfolio'] = prices.drop("IBOV", axis=1) @ weights
@@ -41,7 +47,6 @@ def build_main(tickers, prices):
         c.subheader(t, divider="red")
         colA, colB, colC = c.columns(3)
 
-        # Removendo imagens e usando texto
         if t == "portfolio":
             colA.write("📊 Portfolio")
         elif t == "IBOV":
@@ -80,14 +85,11 @@ def build_main(tickers, prices):
         fig.layout.coloraxis.colorbar.title = 'Sharpe'
         st.plotly_chart(fig, use_container_width=True)
 
-# Configuração da página
 st.set_page_config(layout="wide")
 
-# Barra lateral
 with st.sidebar:
     tickers, prices = build_sidebar()
 
-# Título da página principal
 st.title('Python para Investidores')
 if tickers:
     build_main(tickers, prices)
