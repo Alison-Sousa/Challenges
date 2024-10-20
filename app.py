@@ -47,11 +47,15 @@ def build_main(tickers, prices):
         c.subheader(ticker, divider="red")
         colA, colB, colC = c.columns(3)
 
-        # Exibe o logotipo da empresa
+        # Tenta obter a URL do logotipo da empresa
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         stock_info = yf.Ticker(ticker_clean).info  # Obtém informações da empresa
-        logo_url = stock_info.get('logo_url', None)  # Obtém a URL do logotipo
+        logo_url = stock_info.get('logo_url', None)  # Tenta obter a URL do logotipo
 
+        # Se não conseguir, tenta uma URL padrão do GitHub
+        if not logo_url:
+            logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'
+        
         if logo_url:
             colA.image(logo_url, width=50)  # Exibe o logotipo
         else:
