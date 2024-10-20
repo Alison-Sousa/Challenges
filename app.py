@@ -10,12 +10,13 @@ from streamlit_extras.grid import grid
 def build_sidebar():
     st.title("Select Companies")
     
-    ticker_list = pd.read_csv("tickers.csv", header=None)  # Sem cabeçalho
-    options = ticker_list.iloc[:, 1].tolist()  # Segunda coluna com os tickers
-    options = [t for t in options if t != '0']  # Remove '0' da lista
+    # Load the CSV file and print the columns
+    ticker_list = pd.read_csv("tickers.csv", header=None)  # No header
+    options = ticker_list.iloc[:, 1].tolist()  # The second column contains the tickers (ignores index 0)
+    options = [t for t in options if t != '0']  # Remove '0' from the list
 
     tickers = st.multiselect(label="Select Companies", options=options, placeholder='Codes')
-    tickers = [t + ".SA" for t in tickers]  # Adiciona a extensão .SA apenas para os tickers selecionados
+    tickers = [t + ".SA" for t in tickers]  # Append the .SA suffix only for selected tickers
 
     start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
     end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
@@ -32,12 +33,9 @@ def build_sidebar():
                 prices = prices.to_frame()
                 prices.columns = [tickers[0].rstrip(".SA")]
 
-            # Renomeando para IBOVESPA
+            # Substitui "^BVSP" por "IBOVESPA" nos dados
             prices.columns = prices.columns.str.rstrip(".SA")
             prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
-            
-            # Verificação dos tickers renomeados
-            st.write(prices.columns)  # Adicionando esta linha para verificar os nomes dos tickers
             
             return tickers, prices
         
@@ -48,8 +46,10 @@ def build_sidebar():
     return None, None
 
 def build_main(tickers, prices):
+    index_col = "IBOVESPA" if "IBOVESPA" in prices.columns else prices.columns[-1]
+    
     weights = np.ones(len(tickers)) / len(tickers)
-    prices['portfolio'] = prices.drop('IBOVESPA', axis=1) @ weights
+    prices['portfolio'] = prices.drop(index_col, axis=1) @ weights
     norm_prices = 100 * prices / prices.iloc[0]
     returns = prices.pct_change()[1:]
     vols = returns.std() * np.sqrt(252)
@@ -61,10 +61,10 @@ def build_main(tickers, prices):
         c.subheader(ticker, divider="red")
         colA, colB, colC = c.columns(3)
 
+        # Tenta obter a URL do logotipo da empresa
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         logo_url = None
 
-        # Define a imagem apenas para o IBOVESPA e o portfólio
         if ticker_clean == "IBOVESPA":
             logo_url = "B3.png"  # Logo da B3
         elif ticker_clean == "portfolio":
