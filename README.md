@@ -2,7 +2,7 @@
 
 This is a simple Streamlit application that displays economic indicators for different countries using data from the International Monetary Fund (IMF).
 
-![Dashboard](itau dashboard.PNG)
+![Dashboard](itau_dashboard.PNG)
 
 ## Tutorial for Running the Application
 
