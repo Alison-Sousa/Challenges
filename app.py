@@ -10,13 +10,12 @@ from streamlit_extras.grid import grid
 def build_sidebar():
     st.title("Select Companies")
     
-    # Load the CSV file and print the columns
-    ticker_list = pd.read_csv("tickers.csv", header=None)  # No header
-    options = ticker_list.iloc[:, 1].tolist()  # The second column contains the tickers (ignores index 0)
-    options = [t for t in options if t != '0']  # Remove '0' from the list
+    ticker_list = pd.read_csv("tickers.csv", header=None)  # Sem cabeçalho
+    options = ticker_list.iloc[:, 1].tolist()  # Segunda coluna com os tickers
+    options = [t for t in options if t != '0']  # Remove '0' da lista
 
     tickers = st.multiselect(label="Select Companies", options=options, placeholder='Codes')
-    tickers = [t + ".SA" for t in tickers]  # Append the .SA suffix only for selected tickers
+    tickers = [t + ".SA" for t in tickers]  # Adiciona a extensão .SA apenas para os tickers selecionados
 
     start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
     end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
@@ -29,16 +28,13 @@ def build_sidebar():
                 st.error("Não foram encontrados dados para os tickers selecionados.")
                 return None, None
             
-            # Renomeia a coluna "^BVSP" para "IBOVESPA"
-            prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
-            
             if len(tickers) == 1:
                 prices = prices.to_frame()
                 prices.columns = [tickers[0].rstrip(".SA")]
 
-            # Remove a extensão .SA dos tickers
             prices.columns = prices.columns.str.rstrip(".SA")
-
+            prices = prices.rename(columns={"^BVSP": "IBOVESPA"})
+            
             return tickers, prices
         
         except Exception as e:
@@ -48,10 +44,8 @@ def build_sidebar():
     return None, None
 
 def build_main(tickers, prices):
-    index_col = "IBOVESPA" if "IBOVESPA" in prices.columns else prices.columns[-1]
-    
     weights = np.ones(len(tickers)) / len(tickers)
-    prices['portfolio'] = prices.drop(index_col, axis=1) @ weights
+    prices['portfolio'] = prices.drop('IBOVESPA', axis=1) @ weights
     norm_prices = 100 * prices / prices.iloc[0]
     returns = prices.pct_change()[1:]
     vols = returns.std() * np.sqrt(252)
@@ -63,25 +57,18 @@ def build_main(tickers, prices):
         c.subheader(ticker, divider="red")
         colA, colB, colC = c.columns(3)
 
-        # Tenta obter o logotipo da empresa
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
-        
-        # Definindo a URL da imagem corretamente
+
         if ticker_clean == "IBOVESPA":
-            logo_url = "B3.png"  # Logo da B3 para IBOVESPA
+            colA.image("B3.png", width=50)  # Imagem do IBOVESPA
         elif ticker_clean == "portfolio":
-            logo_url = "B3.png"  # Ícone de portfólio
+            colA.image("B3.png", width=50)  # Ícone de portfólio
         else:
             stock_info = yf.Ticker(ticker_clean).info
             logo_url = stock_info.get('logo_url', None)
-            if not logo_url:
-                logo_url = f'https://raw.githubusercontent.com/thefintz/icones-b3/main/icones/{ticker_clean}.png'  # Imagem padrão
-
-        # Exibindo a imagem do logotipo
-        colA.image(logo_url, width=50)  # Exibe o logotipo
+            colA.image(logo_url if logo_url else "B3.png", width=50)  # Exibe logotipo ou padrão
 
         colA.write(f"🏢 {ticker_clean}")
-
         colB.metric(label="Return", value=f"{rets[ticker]:.0%}")
         colC.metric(label="Volatility", value=f"{vols[ticker]:.0%}")
         style_metric_cards(background_color='rgba(255,255,255,0)')
