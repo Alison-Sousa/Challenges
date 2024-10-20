@@ -8,18 +8,18 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 
 def build_sidebar():
-    st.title("Selecionar Empresas")
+    st.title("Select Companies")
     
-    # Carrega o arquivo CSV e imprime as colunas
-    ticker_list = pd.read_csv("tickers.csv", header=None)  # Sem cabeçalho
-    options = ticker_list.iloc[:, 1].tolist()  # A segunda coluna tem os tickers (ignora o índice 0)
-    options = [t for t in options if t != '0']  # Remove '0' da lista
+    # Load the CSV file and print the columns
+    ticker_list = pd.read_csv("tickers.csv", header=None)  # No header
+    options = ticker_list.iloc[:, 1].tolist()  # The second column contains the tickers (ignores index 0)
+    options = [t for t in options if t != '0']  # Remove '0' from the list
 
-    tickers = st.multiselect(label="Selecione as Empresas", options=options, placeholder='Códigos')
-    tickers = [t + ".SA" for t in tickers]  # Adiciona o sufixo .SA apenas para tickers selecionados
+    tickers = st.multiselect(label="Select Companies", options=options, placeholder='Codes')
+    tickers = [t + ".SA" for t in tickers]  # Append the .SA suffix only for selected tickers
 
-    start_date = st.date_input("De", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
-    end_date = st.date_input("Até", format="DD/MM/YYYY", value="today")
+    start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2023, 1, 2))
+    end_date = st.date_input("To", format="DD/MM/YYYY", value="today")
 
     if tickers:
         prices = yf.download(tickers, start=start_date, end=end_date)["Adj Close"]
@@ -46,20 +46,20 @@ def build_main(tickers, prices):
         c.subheader(t, divider="red")
         colA, colB, colC = c.columns(3)
 
-        # Exibe o nome da empresa
+        # Display the company name
         colA.write(f"🏢 {t.rstrip('.SA')}")
 
-        colB.metric(label="Retorno", value=f"{rets[t]:.0%}")
-        colC.metric(label="Volatilidade", value=f"{vols[t]:.0%}")
+        colB.metric(label="Return", value=f"{rets[t]:.0%}")
+        colC.metric(label="Volatility", value=f"{vols[t]:.0%}")
         style_metric_cards(background_color='rgba(255,255,255,0)')
 
     col1, col2 = st.columns(2, gap='large')
     with col1:
-        st.subheader("Desempenho Relativo")
+        st.subheader("Relative Performance")
         st.line_chart(norm_prices, height=600)
 
     with col2:
-        st.subheader("Risco-Retorno")
+        st.subheader("Risk-Return")
         fig = px.scatter(
             x=vols,
             y=rets,
@@ -72,8 +72,8 @@ def build_main(tickers, prices):
             marker=dict(size=45),
             textfont_size=10,
         )
-        fig.layout.yaxis.title = 'Retorno Total'
-        fig.layout.xaxis.title = 'Volatilidade (anualizada)'
+        fig.layout.yaxis.title = 'Total Return'
+        fig.layout.xaxis.title = 'Annualized Volatility'
         fig.layout.height = 600
         fig.layout.xaxis.tickformat = ".0%"
         fig.layout.yaxis.tickformat = ".0%"
@@ -85,6 +85,6 @@ st.set_page_config(layout="wide")
 with st.sidebar:
     tickers, prices = build_sidebar()
 
-st.title('Python para Investidores')
+st.title('Python for Investors')
 if tickers:
     build_main(tickers, prices)
