@@ -32,7 +32,6 @@ def build_sidebar():
     return None, None
 
 def build_main(tickers, prices):
-    # Verifica se a coluna do índice está presente
     index_col = "^BVSP" if "^BVSP" in prices.columns else prices.columns[-1]
     
     weights = np.ones(len(tickers)) / len(tickers)
@@ -51,10 +50,12 @@ def build_main(tickers, prices):
         # Exibe o logotipo da empresa
         ticker_clean = ticker.rstrip('.SA')  # Remove a extensão .SA
         stock_info = yf.Ticker(ticker_clean).info  # Obtém informações da empresa
-        logo_url = stock_info.get('logo_url')  # Obtém a URL do logotipo
+        logo_url = stock_info.get('logo_url', None)  # Obtém a URL do logotipo
 
         if logo_url:
             colA.image(logo_url, width=50)  # Exibe o logotipo
+        else:
+            colA.write("🔍 Logo não disponível")  # Mensagem caso o logotipo não esteja disponível
 
         colA.write(f"🏢 {ticker_clean}")
 
