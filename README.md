@@ -26,7 +26,7 @@ A Streamlit app that allows users to select companies and analyze their stock pe
    
    -**Specify Date Range**: Set the start and end dates for the analysis.
 
-6. Features
+6. **Features**
    
    -Interactive data visualization with graphs.
    
@@ -34,7 +34,7 @@ A Streamlit app that allows users to select companies and analyze their stock pe
    
    -Visual comparisons against the IBOV index.
 
-8. Data Source
+8. **Data Source**
    
    -Stock price data is sourced from Yahoo Finance.
 
